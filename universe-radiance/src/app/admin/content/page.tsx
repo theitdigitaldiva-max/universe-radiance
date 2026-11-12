@@ -23,8 +23,10 @@ export default async function AdminContentPage() {
       <section>
         <h1 className="mb-1 font-serif text-3xl text-charcoal">Site Content</h1>
         <p className="mb-6 text-sm text-charcoal/60">
-          Edit the text that appears across the storefront — announcement bar,
-          hero, about section, and contact details.
+          Edit every section of the homepage — announcement bar, hero banner,
+          headings, the custom-order banner, Our Story, contact banner, and the
+          Instagram photo grid. Upload photos, change button text, and set
+          where each button links. Everything goes live immediately.
         </p>
         <ContentEditor content={content} />
       </section>
