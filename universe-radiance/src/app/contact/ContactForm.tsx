@@ -36,6 +36,20 @@ export function ContactForm() {
     } else {
       setStatus("done");
       setForm({ name: "", email: "", phone: "", subject: "", message: "" });
+      fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "inquiry",
+          data: {
+            name: form.name.trim(),
+            email: form.email.trim(),
+            phone: form.phone.trim(),
+            subject: form.subject.trim(),
+            message: form.message.trim(),
+          },
+        }),
+      }).catch(() => {});
     }
   };
 
