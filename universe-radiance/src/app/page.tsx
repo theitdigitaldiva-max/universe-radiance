@@ -38,28 +38,49 @@ export default async function HomePage() {
       getEvents(),
     ]);
 
+  const igPhotos = [1, 2, 3, 4, 5, 6]
+    .map((n) => content[`ig_photo_${n}`]?.trim() ?? "")
+    .filter(Boolean);
+
   return (
     <>
       <Hero
+        image={content["hero_image"] ?? ""}
         title={content["hero_title"] ?? "Every Season Has a Story"}
         subtitle={
           content["hero_subtitle"] ??
           "Personalized gemstone designs that align with your intention, purpose, and well-being."
         }
+        button1Text={content["hero_button1_text"] ?? "Shop the Collection"}
+        button1Link={content["hero_button1_link"] ?? "/shop"}
+        button2Text={content["hero_button2_text"] ?? "Design Your Own"}
+        button2Link={content["hero_button2_link"] ?? "/customize"}
       />
 
       <Intro
-        subtitle={
+        text={
+          content["intro_text"] ??
           content["hero_subtitle"] ??
           "Personalized gemstone designs that align with your intention, purpose, and well-being."
         }
       />
 
-      <FeaturedCollections categories={categories} />
+      <FeaturedCollections
+        eyebrow={content["collections_eyebrow"] ?? "Curated for You"}
+        title={content["collections_heading"] ?? "Featured Collections"}
+        categories={categories}
+      />
 
-      <ShopSearchFeature />
+      <ShopSearchFeature
+        eyebrow={content["search_eyebrow"] ?? "Find Your Stone"}
+        title={content["search_heading"] ?? "Search & Discover"}
+      />
 
       <NewArrivalsBestsellers
+        newArrivalsEyebrow={content["new_arrivals_eyebrow"] ?? "Just Landed"}
+        newArrivalsHeading={content["new_arrivals_heading"] ?? "New Arrivals"}
+        bestsellersEyebrow={content["bestsellers_eyebrow"] ?? "Loved by Many"}
+        bestsellersHeading={content["bestsellers_heading"] ?? "Bestselling Bracelets"}
         newArrivals={
           newArrivals.length > 0
             ? newArrivals.map((p) => <ProductCard key={p.id} product={p} />)
@@ -70,14 +91,31 @@ export default async function HomePage() {
         ))}
       />
 
-      <CustomizePromo />
+      <CustomizePromo
+        image={content["promo_image"] ?? ""}
+        eyebrow={content["promo_eyebrow"] ?? "Made Just for You"}
+        title={content["promo_title"] ?? "Your story, strung in gemstones"}
+        body={
+          content["promo_body"] ??
+          "Tell us your intention — a season you are in, a goal you are reaching for, a person you are becoming. We will design a custom bracelet around the stones that carry your meaning."
+        }
+        buttonText={content["promo_button_text"] ?? "Start a Custom Order"}
+        buttonLink={content["promo_button_link"] ?? "/customize"}
+      />
 
       <AboutPreview
-        heading={content["about_heading"] ?? "Beyond the craft lies its true meaning"}
+        image={content["about_image"] ?? ""}
+        eyebrow={content["about_eyebrow"] ?? "Our Story"}
+        heading={
+          content["about_heading"] ??
+          "Beyond the craft lies its true meaning"
+        }
         body={
           content["about_body"] ??
           "Universe Radiance creates personalized gemstone designs that align with your intention, purpose, and enhance well-being."
         }
+        buttonText={content["about_button_text"] ?? "More About Us"}
+        buttonLink={content["about_button_link"] ?? "/about"}
       />
 
       <TestimonialsSection testimonials={testimonials} />
@@ -85,12 +123,22 @@ export default async function HomePage() {
       <EventsPreview events={events} />
 
       <ContactCta
+        eyebrow={content["cta_eyebrow"] ?? "We Would Love to Hear From You"}
+        title={content["cta_heading"] ?? "Questions or Custom Requests?"}
+        body={
+          content["cta_body"] ??
+          "Send us a message and we will get back to you personally — usually within a day."
+        }
+        buttonText={content["cta_button_text"] ?? "Send an Inquiry"}
+        buttonLink={content["cta_button_link"] ?? "/contact"}
         email={content["contact_email"] ?? ""}
         phone={content["contact_phone"] ?? ""}
       />
 
       <SocialSection
         instagram={content["instagram_url"] ?? "https://www.instagram.com/universeradiance"}
+        handle={content["instagram_handle"] ?? "@universeradiance"}
+        photos={igPhotos}
       />
     </>
   );
