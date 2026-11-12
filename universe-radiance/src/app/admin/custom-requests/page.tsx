@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
-import { StatusSelect, Td, Th } from "@/components/admin/ui";
+import { StatusSelect } from "@/components/admin/StatusSelect";
+import { Td, Th } from "@/components/admin/ui";
 import { CUSTOMIZATION_STATUSES } from "@/lib/constants";
 import { formatDate } from "@/lib/utils";
 
