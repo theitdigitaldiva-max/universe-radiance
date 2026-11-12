@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { ShopEvent } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
+import { ImageUploadField } from "./ImageUploadField";
 
 export function EventManager({ events }: { events: ShopEvent[] }) {
   const router = useRouter();
@@ -101,8 +102,12 @@ export function EventManager({ events }: { events: ShopEvent[] }) {
             <input id="ev-date" type="date" value={form.event_date} onChange={(e) => setForm({ ...form, event_date: e.target.value })} className="input-field" />
           </div>
           <div>
-            <label className="label-field" htmlFor="ev-img">Image URL</label>
-            <input id="ev-img" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} placeholder="/images/event-booth.jpg" className="input-field" />
+            <ImageUploadField
+              label="Event Photo"
+              value={form.image_url}
+              folder="events"
+              onChange={(url) => setForm({ ...form, image_url: url })}
+            />
           </div>
           <div>
             <label className="label-field" htmlFor="ev-start">Start Time</label>

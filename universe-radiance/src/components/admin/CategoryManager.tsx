@@ -5,6 +5,7 @@ import { useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { Category } from "@/lib/types";
 import { slugify } from "@/lib/utils";
+import { ImageUploadField } from "./ImageUploadField";
 
 export function CategoryManager({ categories }: { categories: Category[] }) {
   const router = useRouter();
@@ -91,14 +92,21 @@ export function CategoryManager({ categories }: { categories: Category[] }) {
           />
         </div>
         <div>
-          <label className="label-field" htmlFor="cat-img">Image URL</label>
-          <input
-            id="cat-img"
+          <ImageUploadField
+            label="Tile Photo"
             value={form.image_url}
-            onChange={(e) => setForm({ ...form, image_url: e.target.value })}
-            placeholder="/images/hero-display.jpg"
-            className="input-field"
+            folder="categories"
+            onChange={(url) => setForm({ ...form, image_url: url })}
           />
+          <p className="mt-1 text-xs text-charcoal/45">
+            Or paste an image URL:{" "}
+            <input
+              value={form.image_url}
+              onChange={(e) => setForm({ ...form, image_url: e.target.value })}
+              placeholder="/images/hero-display.jpg"
+              className="input-field mt-1"
+            />
+          </p>
         </div>
         <div className="flex gap-2">
           <button type="submit" disabled={busy} className="btn-primary !py-2 text-xs">
