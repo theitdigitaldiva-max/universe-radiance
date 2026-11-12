@@ -51,6 +51,23 @@ export function CustomizeForm() {
       setError("Something went wrong. Please try again or message us on Instagram.");
     } else {
       setStatus("done");
+      fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "custom",
+          data: {
+            name: form.name.trim(),
+            email: form.email.trim(),
+            phone: form.phone.trim(),
+            preferred_gemstones: stones.join(", "),
+            bracelet_size: form.bracelet_size,
+            budget_range: form.budget_range,
+            design_preferences: form.design_preferences.trim(),
+            additional_instructions: form.additional_instructions.trim(),
+          },
+        }),
+      }).catch(() => {});
     }
   };
 
