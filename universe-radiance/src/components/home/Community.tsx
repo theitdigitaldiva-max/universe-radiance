@@ -69,19 +69,34 @@ export function EventsPreview({ events }: { events: ShopEvent[] }) {
   );
 }
 
-export function ContactCta({ email, phone }: { email: string; phone: string }) {
+export function ContactCta({
+  eyebrow,
+  title,
+  body,
+  buttonText,
+  buttonLink,
+  email,
+  phone,
+}: {
+  eyebrow: string;
+  title: string;
+  body: string;
+  buttonText: string;
+  buttonLink: string;
+  email: string;
+  phone: string;
+}) {
   return (
     <section className="bg-charcoal py-16 text-ivory">
       <div className="container-site flex flex-col items-center text-center">
-        <SectionHeading eyebrow="We Would Love to Hear From You" title="Questions or Custom Requests?" />
-        <p className="mt-4 max-w-xl text-ivory/75">
-          Send us a message and we will get back to you personally — usually
-          within a day.
-        </p>
+        <SectionHeading eyebrow={eyebrow} title={title} />
+        <p className="mt-4 max-w-xl text-ivory/75">{body}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-4">
-          <Link href="/contact" className="btn-gold">
-            Send an Inquiry
-          </Link>
+          {buttonText && (
+            <Link href={buttonLink || "/contact"} className="btn-gold">
+              {buttonText}
+            </Link>
+          )}
           {email && (
             <a
               href={`mailto:${email}`}

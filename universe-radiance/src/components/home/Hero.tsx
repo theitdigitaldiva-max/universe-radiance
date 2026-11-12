@@ -2,16 +2,26 @@ import Image from "next/image";
 import Link from "next/link";
 
 export function Hero({
+  image,
   title,
   subtitle,
+  button1Text,
+  button1Link,
+  button2Text,
+  button2Link,
 }: {
+  image: string;
   title: string;
   subtitle: string;
+  button1Text: string;
+  button1Link: string;
+  button2Text: string;
+  button2Link: string;
 }) {
   return (
     <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden">
       <Image
-        src="/images/hero-display.jpg"
+        src={image || "/images/hero-display.jpg"}
         alt="Universe Radiance gemstone bracelet collection"
         fill
         priority
@@ -27,15 +37,19 @@ export function Hero({
           {subtitle}
         </p>
         <div className="mt-9 flex flex-wrap items-center justify-center gap-4">
-          <Link href="/shop" className="btn-gold">
-            Shop the Collection
-          </Link>
-          <Link
-            href="/customize"
-            className="inline-flex items-center justify-center rounded-full border border-ivory/70 px-6 py-3 text-sm font-medium uppercase tracking-widest text-ivory transition hover:bg-ivory hover:text-charcoal"
-          >
-            Design Your Own
-          </Link>
+          {button1Text && (
+            <Link href={button1Link || "/shop"} className="btn-gold">
+              {button1Text}
+            </Link>
+          )}
+          {button2Text && (
+            <Link
+              href={button2Link || "/customize"}
+              className="inline-flex items-center justify-center rounded-full border border-ivory/70 px-6 py-3 text-sm font-medium uppercase tracking-widest text-ivory transition hover:bg-ivory hover:text-charcoal"
+            >
+              {button2Text}
+            </Link>
+          )}
         </div>
       </div>
     </section>
