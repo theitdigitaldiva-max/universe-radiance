@@ -83,6 +83,25 @@ export function CheckoutForm() {
     }
 
     clearCart();
+    fetch("/api/notify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        type: "order",
+        data: {
+          order_number: orderNumber,
+          customer_name: form.customer_name.trim(),
+          email: form.email.trim(),
+          phone: form.phone.trim(),
+          address: form.address.trim(),
+          notes: form.notes.trim(),
+          items: items
+            .map((item) => `${item.quantity}× ${item.name} (${item.size})`)
+            .join(", "),
+          total: formatPeso(subtotal),
+        },
+      }),
+    }).catch(() => {});
     router.push(`/checkout/success?order=${orderNumber}`);
   };
 
