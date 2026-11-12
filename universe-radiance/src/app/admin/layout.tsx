@@ -19,5 +19,22 @@ export default async function AdminLayout({
 
   if (!user && pathname !== "/admin/login") redirect("/admin/login");
 
-  return <AdminShell email={user?.email ?? ""}>{children}</AdminShell>;
+  const [{ count: pendingOrders }, { count: newInquiries }, { count: pendingReviews }] =
+    await Promise.all([
+      supabase.from("orders").select("id", { count: "exact", head: true }).eq("status", "pending"),
+      supabase.from("inquiries").select("id", { count: "exact", head: true }).eq("status", "new"),
+      supabase.from("reviews").select("id", { count: "exact", head: true }).eq("approved", false),
+    ]);
+
+  const badges: Record<string, number | null> = {
+    "/admin/orders": pendingOrders,
+    "/admin/inquiries": newInquiries,
+    "/admin/reviews": pendingReviews,
+  };
+
+  return (
+    <AdminShell email={user?.email ?? ""} badges={badges}>
+      {children}
+    </AdminShell>
+  );
 }

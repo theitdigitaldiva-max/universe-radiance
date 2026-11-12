@@ -57,6 +57,25 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
+      <section className="card mt-8 p-5">
+        <h2 className="font-serif text-xl text-charcoal">Quick actions</h2>
+        <div className="mt-4 flex flex-wrap gap-3">
+          <Link href="/admin/products/new" className="btn-primary">+ Add New Product</Link>
+          <Link href="/admin/events" className="btn-outline">+ Post an Event</Link>
+          <Link href="/admin/orders" className="btn-outline">Check Orders</Link>
+          <Link href="/admin/content" className="btn-outline">Edit Site Text</Link>
+        </div>
+      </section>
+
+      <section className="mt-6 rounded-2xl bg-lavender/30 p-5">
+        <h2 className="font-serif text-xl text-charcoal">How publishing works</h2>
+        <p className="mt-1 text-sm text-charcoal/70">
+          Everything you save here — products, text, events, photos, statuses — goes live on your
+          storefront <strong>immediately</strong>. No export, no rebuild, no waiting. Product photos
+          are uploaded straight to your media library from each product&apos;s edit page.
+        </p>
+      </section>
+
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <section className="card">
           <div className="flex items-center justify-between border-b border-lavender/40 px-5 py-4">
