@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/components/admin/AdminShell";
@@ -14,7 +15,9 @@ export default async function AdminLayout({
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!user) redirect("/admin/login");
+  const pathname = headers().get("x-pathname") ?? "";
 
-  return <AdminShell email={user.email ?? ""}>{children}</AdminShell>;
+  if (!user && pathname !== "/admin/login") redirect("/admin/login");
+
+  return <AdminShell email={user?.email ?? ""}>{children}</AdminShell>;
 }
