@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
@@ -28,21 +29,31 @@ export const metadata: Metadata = {
     "Personalized gemstone jewelry and handmade bracelets designed around your intention, purpose, and well-being.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const content = await getSiteContent();
+  const pathname = headers().get("x-pathname") ?? "";
+  const isAdmin = pathname.startsWith("/admin");
 
   return (
     <html lang="en" className={`${cormorant.variable} ${jost.variable}`}>
       <body>
         <CartProvider>
-          <AnnouncementBar text={content["announcement_text"] ?? ""} />
-          <Navbar />
-          <main className="min-h-[60vh]">{children}</main>
-          <Footer content={content} />
+          {isAdmin ? (
+            children
+          ) : (
+            <>
+              <AnnouncementBar text={content["announcement_text"] ?? ""} />
+              <Navbar />
+              <main className="min-h-[60vh]">{children}</main>
+              <Footer content={content} />
+            </>
+          )}
         </CartProvider>
       </body>
     </html>
