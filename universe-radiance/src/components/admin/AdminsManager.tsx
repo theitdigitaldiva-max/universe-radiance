@@ -29,9 +29,16 @@ export function AdminsManager({
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
 
-  const [notify, setNotify] = useState(notifyEmail);
+  const [notifyList, setNotifyList] = useState<string[]>(
+    notifyEmail
+      .split(",")
+      .map((item) => item.trim().toLowerCase())
+      .filter(Boolean)
+  );
+  const [notifyInput, setNotifyInput] = useState("");
   const [notifyBusy, setNotifyBusy] = useState(false);
   const [notifySaved, setNotifySaved] = useState(false);
+  const [notifyError, setNotifyError] = useState("");
 
   const load = async () => {
     const res = await fetch("/api/admin-users");
@@ -89,14 +96,40 @@ export function AdminsManager({
     await load();
   };
 
-  const saveNotifyEmail = async (e: React.FormEvent) => {
+  const addNotifyEmail = (e: React.FormEvent) => {
     e.preventDefault();
+    const email = notifyInput.trim().toLowerCase();
+    setNotifyError("");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setNotifyError("Enter a valid email address.");
+      return;
+    }
+    if (notifyList.includes(email)) {
+      setNotifyError("That email is already in the list.");
+      return;
+    }
+    setNotifyList([...notifyList, email]);
+    setNotifyInput("");
+    setNotifySaved(false);
+  };
+
+  const removeNotifyEmail = (email: string) => {
+    setNotifyList(notifyList.filter((item) => item !== email));
+    setNotifySaved(false);
+  };
+
+  const saveNotifyEmails = async () => {
+    setNotifyError("");
+    if (notifyList.length === 0) {
+      setNotifyError("Add at least one email first.");
+      return;
+    }
     setNotifyBusy(true);
     setNotifySaved(false);
     const supabase = createClient();
     await supabase
       .from("site_content")
-      .upsert({ key: "notify_email", value: notify.trim() });
+      .upsert({ key: "notify_email", value: notifyList.join(",") });
     setNotifyBusy(false);
     setNotifySaved(true);
     router.refresh();
@@ -198,30 +231,66 @@ export function AdminsManager({
       </section>
 
       <section>
-        <h2 className="font-serif text-2xl text-charcoal">Notification Email</h2>
+        <h2 className="font-serif text-2xl text-charcoal">Notification Emails</h2>
         <p className="mt-1 mb-5 text-sm text-charcoal/55">
-          Where inquiry, custom-order, and order emails are sent. Set this to
-          your Gmail (or the owner’s Gmail) so messages from the website land
-          in the right inbox.
+          Every address in this list receives an email whenever a customer sends an
+          inquiry, custom-order request, or order request. Add your Gmail, the
+          owner’s Gmail, or any admin’s Gmail. Changes are live immediately.
         </p>
-        <form onSubmit={saveNotifyEmail} className="card flex flex-wrap items-end gap-4 p-5">
+
+        <form onSubmit={addNotifyEmail} className="card flex flex-wrap items-end gap-4 p-5">
           <div className="min-w-64 flex-1">
-            <label className="label-field" htmlFor="notify-email">Notification Gmail</label>
+            <label className="label-field" htmlFor="notify-email">Admin Gmail to notify</label>
             <input
               id="notify-email"
               type="email"
-              required
-              value={notify}
-              onChange={(e) => setNotify(e.target.value)}
+              value={notifyInput}
+              onChange={(e) => setNotifyInput(e.target.value)}
               className="input-field"
-              placeholder={superadminEmail}
+              placeholder="name@gmail.com"
             />
           </div>
-          <button type="submit" disabled={notifyBusy} className="btn-primary">
-            {notifyBusy ? "Saving..." : "Save"}
+          <button type="submit" className="btn-outline">
+            + Add Email
           </button>
-          {notifySaved && <span className="text-sm text-emerald-700">Saved ✓</span>}
         </form>
+
+        {notifyError && <p className="mt-3 text-sm text-red-600">{notifyError}</p>}
+
+        {notifyList.length > 0 && (
+          <div className="mt-4 flex flex-wrap gap-2">
+            {notifyList.map((email) => (
+              <span
+                key={email}
+                className="badge inline-flex items-center gap-2 bg-plum/10 px-3 py-1.5 text-charcoal"
+              >
+                {email}
+                <button
+                  type="button"
+                  onClick={() => removeNotifyEmail(email)}
+                  aria-label={`Remove ${email}`}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-4 flex items-center gap-4">
+          <button onClick={saveNotifyEmails} disabled={notifyBusy} className="btn-primary">
+            {notifyBusy ? "Saving..." : "Save recipients"}
+          </button>
+          {notifySaved && <span className="text-sm text-emerald-700">Saved ✓ — live on the site immediately.</span>}
+        </div>
+
+        <p className="mt-3 text-xs text-charcoal/45">
+          Note: while emails are sent from Resend’s free test sender, only the
+          Gmail that owns the Resend account (theitdigitaldiva@gmail.com) can
+          actually receive them. Other addresses start working once a domain is
+          verified in Resend.
+        </p>
       </section>
     </div>
   );
