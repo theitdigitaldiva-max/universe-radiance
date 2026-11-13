@@ -38,10 +38,14 @@ export async function POST(request: Request) {
         .select("value")
         .eq("key", "notify_email")
         .single();
-      const configured = (data?.value ?? "")
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean);
+      const rawValue = data?.value;
+      const configured: string[] =
+        typeof rawValue === "string"
+          ? rawValue
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean)
+          : [];
       if (configured.length > 0) recipients = configured;
     } catch {
       // keep the default
