@@ -16,6 +16,7 @@ const LINKS = [
   { href: "/admin/reviews", label: "Reviews" },
   { href: "/admin/events", label: "Events" },
   { href: "/admin/content", label: "Site Content" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 export function AdminShell({
