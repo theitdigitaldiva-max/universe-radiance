@@ -27,7 +27,10 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, emailed: false });
     }
 
-    let notifyEmail = process.env.NOTIFY_EMAIL ?? SUPERADMIN_EMAIL;
+    let recipients = (process.env.NOTIFY_EMAIL ?? SUPERADMIN_EMAIL)
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
     try {
       const supabase = createClient();
       const { data } = await supabase
@@ -35,7 +38,11 @@ export async function POST(request: Request) {
         .select("value")
         .eq("key", "notify_email")
         .single();
-      if (data?.value?.trim()) notifyEmail = data.value.trim();
+      const configured = (data?.value ?? "")
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+      if (configured.length > 0) recipients = configured;
     } catch {
       // keep the default
     }
@@ -99,7 +106,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         from: "Universe Radiance <onboarding@resend.dev>",
-        to: [notifyEmail],
+        to: recipients,
         reply_to: data.email || undefined,
         subject: `${title}${data.subject ? `: ${data.subject}` : ""}`,
         html,
